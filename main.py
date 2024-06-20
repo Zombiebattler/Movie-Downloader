@@ -4,8 +4,6 @@ from imdb import IMDb
 import requests
 import os
 
-
-
 def startup():
     if not os.path.exists('./downloads'):
         os.mkdir('./downloads')
@@ -47,7 +45,7 @@ def search(title):
 
 
 def download_video(url, filename):
-    print("📥 Downloading video...\n")
+    print("\n📥 Downloading video...\n")
     try:
         filename = f"./downloads/{filename}"
         response = requests.get(url, stream=True)
@@ -61,8 +59,8 @@ def download_video(url, filename):
     except Exception:
         print("\n❌ Video Download Failed \n")
         input()
-        print("\n✅ Download complete!\n")
-        input()
+    print("\n✅ Download complete!\n")
+    input()
 
 def main():
     print("\n╔════════════════════════════════════════════════════╗")
@@ -84,6 +82,7 @@ if __name__ == '__main__':
         startup()
         while True:
             main()
+            input()
             clear()
     except Exception as e:
         print(f"Critical Error:\n{e}")
