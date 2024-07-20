@@ -63,7 +63,11 @@ def search(title):
         print(f"   IMDb Link: https://www.imdb.com/title/tt{movie_id}/")
 
         data = {"name" : f"{selected_movie['title']}","id": f"tt{movie_id}","year" : f"{selected_movie['year']}",}
-        return data
+        name = f"{data['name']} ({data['year']}) [imdbid-{data['id']}]"
+        return name
+    elif inp == 0:
+        name = input("\nEnter a movie: ")
+        return name
     else:
         print("Invalid selection. Please choose a number from the list.")
         return False
