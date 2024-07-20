@@ -4,12 +4,36 @@ from imdb import IMDb
 import requests
 import os
 
+webhook_url = ""
+
 def startup():
     if not os.path.exists('./downloads'):
         os.mkdir('./downloads')
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def dc_webhook(movie):
+    if webhook_url != "":
+        data = {
+            "content": f"Movie {movie} Finished Downloading",
+        }
+        response = requests.post(webhook_url, json=data)
+        if response.status_code == 204:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
+
+def format_filename(name):
+    windows_nono_list = ['\\', '/', ':', '*', '?', '"', '<', '>', '|']
+    for nono in windows_nono_list:
+        name = name.replace(nono, ' ')
+    return name
 
 def get_format(url):
     parsed_url = urlparse(url)
@@ -18,6 +42,7 @@ def get_format(url):
     file_extension = os.path.splitext(filename)[1]
     file_extension = file_extension.lstrip('.')
     return file_extension
+
 
 def search(title):
     ia = IMDb()
@@ -44,10 +69,10 @@ def search(title):
         return False
 
 
-def download_video(url, filename):
+def download_video(url, fl):
     print("\n📥 Downloading video...\n")
     try:
-        filename = f"./downloads/{filename}"
+        filename = f"./downloads/{format_filename(fl)}"
         response = requests.get(url, stream=True)
         total_size = int(response.headers.get('content-length', 0))
 
@@ -56,16 +81,18 @@ def download_video(url, filename):
                 if chunk:
                     f.write(chunk)
                     pbar.update(len(chunk))
+
+        print("\n✅ Download complete!\n")
+        dc_webhook(fl)
+        input()
     except Exception:
         print("\n❌ Video Download Failed \n")
         input()
-    print("\n✅ Download complete!\n")
-    input()
 
 def main():
     print("\n╔════════════════════════════════════════════════════╗")
     print("║               🎥 Movie Downloader 🎥               ║")
-    print("║                  By zombiebattler                  ║")
+    print("║                  By Zombiebattler                  ║")
     print("║           https://github.com/Zombiebattler         ║")
     print("╚════════════════════════════════════════════════════╝\n")
 
